@@ -63,7 +63,7 @@ the Free Software Foundation, either version 3 of the License, or
         .tool-button {
             position: relative;
             overflow: hidden;
-            padding: 15px 20px;
+            padding: 15px 15px;
             background: #fff;
             border: none;
             border-radius: 15px;
@@ -102,7 +102,7 @@ the Free Software Foundation, either version 3 of the License, or
 
         footer .repo-link {
             display: inline-block;
-            color: var(--primary-color);
+            color: rgb(0, 0, 0);
             font-weight: 600;
             opacity: 0;
             animation: fadeIn 1s ease forwards;
@@ -169,14 +169,21 @@ the Free Software Foundation, either version 3 of the License, or
         <button class="tool-button">解除限制</button>
         <button class="tool-button">启用win键</button>
         <button class="tool-button">禁止偷看</button>
-        <button class="tool-button"></button>
+        <button class="tool-button">获取密码</button>
         <button class="tool-button"></button>
         <button class="tool-button"></button>
     </div>
     <h2>Alt+C 隐藏/显示此窗口</h2>
+
     <footer>
-        <a href="javascript:void(0)" class="repo-link" onclick="openRepo()">
+        <a href="javascript:void(0)" style="bottom: 20px" class="repo-link" onclick="openRepo()">
             <i class="fab fa-github" style="margin-right:5px;"></i>GitHub
+        </a>
+    </footer>
+
+    <footer>
+        <a href="javascript:void(0)" style="color: rgb(0, 114, 80);" class="repo-link" onclick="openAD()">
+            <i class="fab" style="margin-right:5px;"></i>AD: BCSY数据库免费查询
         </a>
     </footer>
 
@@ -204,6 +211,10 @@ the Free Software Foundation, either version 3 of the License, or
 
         function openRepo() {
             shell.openExternal('https://github.com/yajiyi/best_tool');
+        }
+
+        function openAD() {
+            shell.openExternal('https://bcsy.database.yajiyi.lol');
         }
     </script>
 </body>
