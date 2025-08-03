@@ -6,6 +6,7 @@ the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version. */
 
 const { app, BrowserWindow, globalShortcut } = require('electron');
+const { Worker, isMainThread } = require('worker_threads');
 
 app.disableHardwareAcceleration();
 
@@ -14,7 +15,6 @@ const createWindow = () => {
     win = new BrowserWindow({
         width: 300,
         height: 500,
-        alwaysOnTop: true,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -30,6 +30,16 @@ const createWindow = () => {
 
     win.on('restore', () => {
         win.setSkipTaskbar(false);
+    });
+
+    const topInterval = setInterval(() => {
+        if (win && !win.isDestroyed()) {
+            win.setAlwaysOnTop(true);
+        }
+    }, 50);
+
+    win.on('closed', () => {
+        clearInterval(topInterval);
     });
 };
 
