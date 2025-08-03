@@ -1,0 +1,15 @@
+{
+  "name": "best_tool",
+  "version": "1.0.0",
+  "description": "The best tool in computer rooms of  bcsy",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "author": "yajiyi",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^37.2.5"
+  }
+}

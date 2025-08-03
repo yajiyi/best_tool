@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Tool</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --bg-gradient: linear-gradient(135deg, #ece9e6, #ffffff);
+        }
+
+        * {
+            box-sizing: border-box;
+            User-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 5px 20px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin: 0px 0 -10px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        h2 {
+            font-size: 1rem;
+            color: var(--primary-color);
+            margin: 10px 0 30px;
+            opacity: 0;
+            animation: fadeIn 1s ease forwards;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .tool-button {
+            position: relative;
+            overflow: hidden;
+            padding: 15px 20px;
+            background: #fff;
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: var(--delay, 0s);
+        }
+
+        .tool-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            background: rgba(0, 0, 0, 0.2);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Best Tool</h1>
+    <h2>专为BCSY机房打造</h2>
+    <div class="container">
+        <button class="tool-button">杀死极域</button>
+        <button class="tool-button">杀死联想</button>
+        <button class="tool-button">解除限制</button>
+        <button class="tool-button">启用win键</button>
+        <button class="tool-button">禁止偷看</button>
+        <button class="tool-button">Tool 6</button>
+        <button class="tool-button">Tool 7</button>
+        <button class="tool-button">Tool 8</button>
+    </div>
+    <h2>Alt+C 隐藏/显示此窗口</h2>
+
+    <script>
+        const buttons = document.querySelectorAll('.tool-button');
+        buttons.forEach((btn, i) => {
+            // staggered fade-in
+            btn.style.setProperty('--delay', `${i * 0.1}s`);
+            // ripple effect on click
+            btn.addEventListener('click', function (e) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(this.clientWidth, this.clientHeight);
+                const radius = diameter / 2;
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - this.offsetLeft - radius}px`;
+                circle.style.top = `${e.clientY - this.offsetTop - radius}px`;
+                circle.classList.add('ripple');
+                // remove previous ripple
+                const existing = this.querySelector('.ripple');
+                if (existing) existing.remove();
+                this.appendChild(circle);
+            });
+        });
+    </script>
+</body>
+
+</html>
