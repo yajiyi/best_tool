@@ -1,9 +1,9 @@
-/* Copyright (C) 2025 yajiyi
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version. */
+/*
+Copyright (C) 2025 yajiyi
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
+*/
 
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const child_process = require('child_process');
@@ -11,7 +11,7 @@ const { title } = require('process');
 
 app.disableHardwareAcceleration();
 
-let win, messageBoxWin, passwordBoxWin, messageBoxTitle, messageBoxMessage;
+let win, alwaysOnTop, messageBoxWin, passwordBoxWin, messageBoxTitle, messageBoxMessage;
 function createWindow() {
     win = new BrowserWindow({
         width: 300,
@@ -33,9 +33,11 @@ function createWindow() {
         win.setSkipTaskbar(false);
     });
 
+    alwaysOnTop = true;
+
     const topInterval = setInterval(() => {
         if (win && !win.isDestroyed()) {
-            win.setAlwaysOnTop(true);
+            win.setAlwaysOnTop(alwaysOnTop);
         }
     }, 50);
 
@@ -45,11 +47,17 @@ function createWindow() {
 };
 
 function messageBox(title, message) {
+    alwaysOnTop = false;
+    win.setEnabled(false);
     messageBoxTitle = title;
     messageBoxMessage = message;
+    height = 200;
+    if (message === '') {
+        height = 150;
+    }
     messageBoxWin = new BrowserWindow({
         width: 300,
-        height: 200,
+        height: height,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false
@@ -61,6 +69,8 @@ function messageBox(title, message) {
     messageBoxWin.setAlwaysOnTop(true);
 
     messageBoxWin.on('close', () => {
+        alwaysOnTop = true;
+        win.setEnabled(true);
         messageBoxWin = null;
     });
 }
@@ -70,6 +80,8 @@ ipcMain.on('getMessage', (event) => {
 });
 
 function passwordBox() {
+    alwaysOnTop = false;
+    win.setEnabled(false);
     passwordBoxWin = new BrowserWindow({
         width: 400,
         height: 550,
@@ -84,6 +96,8 @@ function passwordBox() {
     passwordBoxWin.setAlwaysOnTop(true);
 
     passwordBoxWin.on('close', () => {
+        alwaysOnTop = true;
+        win.setEnabled(true);
         passwordBoxWin = null;
     });
 }
