@@ -15,7 +15,11 @@
     "files": [
       "**/*"
     ],
+    "portable": {
+      "requestExecutionLevel": "admin"
+    },
     "win": {
+      "requestedExecutionLevel": "requireAdministrator",
       "target": [
         {
           "target": "portable",
@@ -23,8 +27,7 @@
             "x64"
           ]
         }
-      ],
-      "requestedExecutionLevel": "requireAdministrator"
+      ]
     }
   },
   "devDependencies": {
