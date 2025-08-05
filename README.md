@@ -1,19 +1,13 @@
 # Best Tool
 
-## 许可证
-本项目使用 GNU General Public License v3.0 许可证。具体见 `LICENSE` 文件
+---
 
+### 本项目使用 GNU General Public License v3.0 许可证。具体见 `LICENSE` 文件
 ---
 
  - 拔萃实验机房最好的工具箱
  - 使用 nodejs + electron 编写
  - Alt + C 可以隐藏/显示程序窗口
-
----
-
-### 软件截图:
-
-![](image.png)
 
 ---
 
@@ -38,4 +32,10 @@ npm install electron --save-dev
 3. 运行
 ```bash
 npm run start
+```
+---
+
+### 打包
+```bash
+npm run build
 ```
