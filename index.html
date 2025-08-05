@@ -22,7 +22,11 @@ You should have received a copy of the GNU General Public License along with thi
 
         * {
             box-sizing: border-box;
-            User-select: none;
+            user-select: none;
+        }
+
+        ::-webkit-scrollbar {
+            display: none;
         }
 
         body {
@@ -170,8 +174,6 @@ You should have received a copy of the GNU General Public License along with thi
         <button class="tool-button" onclick="enableWinKey()">启用win键</button>
         <button class="tool-button" onclick="disableCapture()">禁止偷看</button>
         <button class="tool-button" onclick="getPassword()">获取密码</button>
-        <button class="tool-button"></button>
-        <button class="tool-button"></button>
     </div>
     <h2>Alt+C 隐藏/显示此窗口</h2>
 

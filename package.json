@@ -4,12 +4,31 @@
   "description": "拔萃实验机房最好的工具箱",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron ."
+    "start": "chcp 65001 & electron .",
+    "build": "electron-builder --win"
   },
   "author": "yajiyi",
   "license": "GPL-3.0-only",
+  "build": {
+    "appId": "com.yajiyi.best_tool",
+    "productName": "BestTool",
+    "files": [
+      "**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "requestedExecutionLevel": "requireAdministrator"
+    }
+  },
   "devDependencies": {
-    "electron": "^37.2.5"
+    "electron": "^37.2.5",
+    "electron-builder": "^26.0.12"
   }
 }

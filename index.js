@@ -51,9 +51,9 @@ function messageBox(title, message) {
     win.setEnabled(false);
     messageBoxTitle = title;
     messageBoxMessage = message;
-    height = 200;
+    height = 250;
     if (message === '') {
-        height = 150;
+        height = 200;
     }
     messageBoxWin = new BrowserWindow({
         width: 300,
@@ -164,7 +164,7 @@ ipcMain.on('operation', (event, operation) => {
         });
         messageBox('操作完成', '需要重启网络适配器或重新插拔网线才能解除上网限制');
     } else if (operation === 'enableWinKey') {
-        child_process.exec('reg delete "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout" /v Scancode Map /f', (stdout) => {
+        child_process.exec('reg delete "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout" /v "Scancode Map" /f', (stdout) => {
             console.log(`${stdout}`);
         });
         messageBox('操作完成', '需要注销才能生效');
