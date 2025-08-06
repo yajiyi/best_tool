@@ -36,6 +36,7 @@ function createWindow() {
     win.setMenuBarVisibility(false);
     win.loadFile('index.html');
     win.setResizable(false);
+    win.setEnabled(false);
 
     win.on('minimize', () => {
         win.setSkipTaskbar(true);
@@ -44,8 +45,6 @@ function createWindow() {
     win.on('restore', () => {
         win.setSkipTaskbar(false);
     });
-
-    alwaysOnTop = true;
 
     const topInterval = setInterval(() => {
         if (win && !win.isDestroyed()) {
@@ -57,6 +56,26 @@ function createWindow() {
         clearInterval(topInterval);
     });
 };
+
+function createDisclaimerWindow() {
+    const disclaimerWin = new BrowserWindow({
+        width: 550,
+        height: 460,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+    });
+    disclaimerWin.setMenuBarVisibility(false);
+    disclaimerWin.loadFile('disclaimer.html');
+    disclaimerWin.setResizable(false);
+    disclaimerWin.setAlwaysOnTop(true);
+
+    disclaimerWin.on('close', () => {
+        win.setEnabled(true);
+        alwaysOnTop = true;
+    });
+}
 
 function messageBox(title, message) {
     alwaysOnTop = false;
@@ -131,6 +150,7 @@ ipcMain.on('getPasswordData', (event) => {
 });
 
 app.whenReady().then(() => {
+    createDisclaimerWindow();
     createWindow();
 
     const success = globalShortcut.register('Alt+C', () => {

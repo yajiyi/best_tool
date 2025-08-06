@@ -55,7 +55,7 @@ Contact: yajiyi114514@gmail.com
             padding: 30px 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
-            max-width: 360px;
+            max-width: 500px;
             width: 100%;
             height: 100%;
             animation: fadeInUp 0.6s ease forwards;
@@ -72,6 +72,7 @@ Contact: yajiyi114514@gmail.com
             font-size: 1rem;
             color: #333;
             line-height: 1.4;
+            white-space: pre-line;
         }
 
         .tool-button {
@@ -136,11 +137,14 @@ Contact: yajiyi114514@gmail.com
         const msgEl = document.getElementById('message');
         const okBtn = document.getElementById('okBtn');
 
-        ipcRenderer.send('getMessage');
-        ipcRenderer.on('message', (event, title, message) => {
-            titleEl.textContent = title;
-            msgEl.textContent = message;
-        });
+        titleEl.textContent = 'Best Tool 免责声明';
+        msgEl.textContent = `
+1. 使用本软件可能对机房软件产生修改效果，所致一切后果（如功能异常、数据丢失等）由用户自行承担，作者不承担任何责任。  
+2. 因此产生的师长批评、处分或其他后果，责任自负。  
+3. 本软件仅供参考，不保证适用性、准确性或完整性。  
+4. 用户应遵守国家法律法规及学校/机构规定，自行评估风险并承担一切责任。  
+
+本免责声明自发布之日起生效，使用本软件即视为接受上述条款。`;
 
         okBtn.addEventListener('click', function (e) {
             const circle = document.createElement('span');
