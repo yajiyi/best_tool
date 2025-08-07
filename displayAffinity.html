@@ -1,0 +1,194 @@
+<!--
+Copyright (C) 2025  yajiyi
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+Contact: yajiyi114514@gmail.com
+-->
+
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Best Tool</title>
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --bg-gradient: linear-gradient(135deg, #ece9e6, #ffffff);
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-gradient);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .tool-button {
+            padding: 12px 24px;
+            background: #fff;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            font-weight: 600;
+            color: #333;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease forwards;
+            animation-delay: var(--delay, 0s);
+        }
+
+        .tool-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            transform: scale(0);
+            background: rgba(0, 0, 0, 0.2);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #message {
+            margin-top: 5px;
+            margin-bottom: 0px;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+
+        #status {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>反截屏</h1>
+    <div class="container">
+        <button class="tool-button" id="enableBtn">启用反截屏</button>
+        <button class="tool-button" id="disableBtn">禁用反截屏</button>
+    </div>
+    <h3 id="message"></h3>
+    <h3 id="status"></h3>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+        const enableBtn = document.getElementById('enableBtn');
+        const disableBtn = document.getElementById('disableBtn');
+        const msg = document.getElementById('message');
+        const status = document.getElementById('status');
+
+        function showMessage() {
+            msg.textContent = '聚焦目标窗口并按下Ctrl+Alt+C执行操作';
+        }
+
+        function hideMessage() {
+            msg.textContent = '操作已执行';
+        }
+
+        enableBtn.addEventListener('click', () => {
+            ipcRenderer.send('operation', 'enableAffinity');
+            showMessage();
+        });
+
+        disableBtn.addEventListener('click', () => {
+            ipcRenderer.send('operation', 'disableAffinity');
+            showMessage();
+        });
+
+        ipcRenderer.on('operationResult', (event, result) => {
+            if (result === 'affinityExecuted') {
+                hideMessage();
+            }
+        });
+
+        ipcRenderer.on('affinityEnabled', (event) => {
+            status.textContent = '反截屏已启用';
+            status.style.color = 'green';
+        });
+
+        ipcRenderer.on('affinityDisabled', (event) => {
+            status.textContent = '反截屏已禁用';
+            status.style.color = 'red';
+        });
+
+        [enableBtn, disableBtn].forEach((btn, i) => {
+            btn.style.setProperty('--delay', `${i * 0.1}s`);
+            btn.style.position = 'relative';
+            btn.style.overflow = 'hidden';
+            btn.addEventListener('click', function (e) {
+                const circle = document.createElement('span');
+                const diameter = Math.max(this.clientWidth, this.clientHeight);
+                const radius = diameter / 2;
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${e.clientX - this.getBoundingClientRect().left - radius}px`;
+                circle.style.top = `${e.clientY - this.getBoundingClientRect().top - radius}px`;
+                circle.classList.add('ripple');
+                const ripple = this.querySelector('.ripple');
+                if (ripple) ripple.remove();
+                this.appendChild(circle);
+            });
+        });
+    </script>
+</body>
+
+</html>

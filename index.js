@@ -20,10 +20,12 @@ Contact: yajiyi114514@gmail.com
 const { app, BrowserWindow, globalShortcut, ipcMain } = require('electron');
 const child_process = require('child_process');
 const { title } = require('process');
+const path = require('path');
+const { clear } = require('console');
 
 app.disableHardwareAcceleration();
 
-let win, alwaysOnTop, messageBoxWin, passwordBoxWin, messageBoxTitle, messageBoxMessage;
+let win, alwaysOnTop, messageBoxWin, passwordBoxWin, messageBoxTitle, messageBoxMessage, displayAffinityWin, affinity, AffinityInterval;
 function createWindow() {
     win = new BrowserWindow({
         width: 300,
@@ -133,6 +135,45 @@ function passwordBox() {
     });
 }
 
+function displayAffinityWindow() {
+    alwaysOnTop = false;
+    win.setEnabled(false);
+    displayAffinityWin = new BrowserWindow({
+        width: 400,
+        height: 300,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false
+        },
+    });
+    displayAffinityWin.setMenuBarVisibility(false);
+    displayAffinityWin.loadFile('displayAffinity.html');
+    displayAffinityWin.setResizable(false);
+    displayAffinityWin.setAlwaysOnTop(true);
+
+    AffinityInterval = setInterval(() => {
+        const execRoot = app.isPackaged
+            ? path.dirname(process.execPath)
+            : __dirname;
+        const affinityDir = path.join(execRoot, 'displayAffinity');
+        const getAffinityPath = path.join(affinityDir, 'getAffinity.exe');
+        child_process.execFile(getAffinityPath, { windowsHide: false }, (error, stdout, stderr) => {
+            if (stdout.includes('1')) {
+                displayAffinityWin.webContents.send('affinityEnabled');
+            } else if (stdout.includes('0')) {
+                displayAffinityWin.webContents.send('affinityDisabled');
+            }
+        });
+    }, 200);
+
+    displayAffinityWin.on('close', () => {
+        alwaysOnTop = true;
+        win.setEnabled(true);
+        displayAffinityWin = null;
+        clearInterval(AffinityInterval);
+    });
+}
+
 ipcMain.on('getPasswordData', (event) => {
     const rawData = [
         { '极域': 'bcsy(一室) qwer1234(二三室)' },
@@ -153,7 +194,7 @@ app.whenReady().then(() => {
     createDisclaimerWindow();
     createWindow();
 
-    const success = globalShortcut.register('Alt+C', () => {
+    globalShortcut.register('Alt+C', () => {
         if (win.isMinimized()) {
             win.restore();
         } else {
@@ -161,9 +202,30 @@ app.whenReady().then(() => {
         }
     });
 
-    if (!success) {
-        app.quit();
-    }
+    globalShortcut.register('Ctrl+Alt+C', () => {
+        if (affinity == 1) {
+            affinity = 0;
+            const execRoot = app.isPackaged
+                ? path.dirname(process.execPath)
+                : __dirname;
+            const affinityDir = path.join(execRoot, 'displayAffinity');
+            const dllPath = path.join(affinityDir, 'enable.dll');
+            const injectorPath = path.join(affinityDir, 'injector.exe');
+            child_process.execFile(injectorPath, [dllPath], { windowsHide: false });
+            displayAffinityWin.webContents.send('operationResult', 'affinityExecuted');
+            console.log(execRoot);
+        } else if (affinity == 2) {
+            affinity = 0;
+            const execRoot = app.isPackaged
+                ? path.dirname(process.execPath)
+                : __dirname;
+            const affinityDir = path.join(execRoot, 'displayAffinity');
+            const dllPath = path.join(affinityDir, 'disable.dll');
+            const injectorPath = path.join(affinityDir, 'injector.exe');
+            child_process.execFile(injectorPath, [dllPath], { windowsHide: false });
+            displayAffinityWin.webContents.send('operationResult', 'affinityExecuted');
+        }
+    });
 });
 
 app.on('will-quit', () => {
@@ -202,5 +264,11 @@ ipcMain.on('operation', (event, operation) => {
         messageBox('操作完成', '需要注销才能生效');
     } else if (operation === 'getPassword') {
         passwordBox();
+    } else if (operation === 'disableCapture') {
+        displayAffinityWindow();
+    } else if (operation === 'enableAffinity') {
+        affinity = 1;
+    } else if (operation === 'disableAffinity') {
+        affinity = 2;
     }
 })

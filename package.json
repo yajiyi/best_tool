@@ -5,7 +5,12 @@
   "main": "index.js",
   "scripts": {
     "start": "chcp 65001 & electron .",
-    "build": "electron-builder --win"
+    "build": "npm run build:enable && npm run build:disable && npm run build:injector && npm run build:getAffinity && npm run build:electron",
+    "build:enable": "g++ -shared -o displayAffinity/enable.dll displayAffinity/enable.cpp",
+    "build:disable": "g++ -shared -o displayAffinity/disable.dll displayAffinity/disable.cpp",
+    "build:injector": "g++ -o displayAffinity/injector.exe displayAffinity/injector.cpp",
+    "build:getAffinity": "g++ -o displayAffinity/getAffinity.exe displayAffinity/getAffinity.cpp",
+    "build:electron": "electron-builder --win"
   },
   "author": "yajiyi",
   "license": "GPL-3.0-only",
@@ -14,6 +19,16 @@
     "productName": "BestTool",
     "files": [
       "**/*"
+    ],
+    "extraFiles": [
+      {
+        "from": "displayAffinity/",
+        "to": "displayAffinity/",
+        "filter": [
+          "**/*.exe",
+          "**/*.dll"
+        ]
+      }
     ],
     "portable": {
       "requestExecutionLevel": "admin"
