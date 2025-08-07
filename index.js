@@ -246,27 +246,37 @@ app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
 
+function AddIFEO(name, debuggerPath='') {
+    child_process.exec(`reg add "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options\\${name}" /v Debugger /t REG_SZ /d "${debuggerPath}" /f`);
+}
+
 ipcMain.on('operation', (event, operation) => {
     if (operation === 'killMythware') {
-        child_process.exec('taskkill /f /im studentmain.exe', (stdout) => {
-            console.log(`${stdout}`);
-        });
+        child_process.exec('taskkill /f /im studentmain.exe');
         messageBox('操作完成', '');
     } else if (operation === 'killLenovo') {
-
+        // PortControl64.exe
+        // DeploymentAgent.exe
+        // DesktopCheck.exe
+        // LenovoLockScreen.exe
+        // tvnserver.exe
+        AddIFEO('PortControl64.exe');
+        AddIFEO('DeploymentAgent.exe');
+        AddIFEO('DesktopCheck.exe');
+        AddIFEO('LenovoLockScreen.exe');
+        AddIFEO('tvnserver.exe');
+        child_process.exec('taskkill /f /im PortControl64.exe');
+        child_process.exec('taskkill /f /im DeploymentAgent.exe');
+        child_process.exec('taskkill /f /im DesktopCheck.exe');
+        child_process.exec('taskkill /f /im LenovoLockScreen.exe');
+        child_process.exec('taskkill /f /im tvnserver.exe');
         messageBox('操作完成', '');
     } else if (operation === 'removeRestrictions') {
-        child_process.exec('sc stop TDFileFilter', (stdout) => {
-            console.log(`${stdout}`);
-        });
-        child_process.exec('sc stop TDNetFilter', (stdout) => {
-            console.log(`${stdout}`);
-        });
+        child_process.exec('sc stop TDFileFilter');
+        child_process.exec('sc stop TDNetFilter');
         messageBox('操作完成', '需要重启网络适配器或重新插拔网线才能解除上网限制');
     } else if (operation === 'enableWinKey') {
-        child_process.exec('reg delete "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout" /v "Scancode Map" /f', (stdout) => {
-            console.log(`${stdout}`);
-        });
+        child_process.exec('reg delete "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Keyboard Layout" /v "Scancode Map" /f');
         messageBox('操作完成', '需要注销才能生效');
     } else if (operation === 'getPassword') {
         passwordBox();
