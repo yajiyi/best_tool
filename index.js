@@ -159,18 +159,24 @@ function displayAffinityWindow() {
         const getAffinityPath = path.join(affinityDir, 'getAffinity.exe');
         child_process.execFile(getAffinityPath, { windowsHide: false }, (error, stdout, stderr) => {
             if (stdout.includes('1')) {
-                displayAffinityWin.webContents.send('affinityEnabled');
+                try {
+                    displayAffinityWin.webContents.send('affinityEnabled');
+                } catch (error) {
+                }
             } else if (stdout.includes('0')) {
-                displayAffinityWin.webContents.send('affinityDisabled');
+                try {
+                    displayAffinityWin.webContents.send('affinityDisabled');
+                } catch (error) {
+                }
             }
         });
     }, 200);
 
     displayAffinityWin.on('close', () => {
+        clearInterval(AffinityInterval);
         alwaysOnTop = true;
         win.setEnabled(true);
         displayAffinityWin = null;
-        clearInterval(AffinityInterval);
     });
 }
 

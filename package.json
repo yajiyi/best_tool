@@ -1,11 +1,11 @@
 {
   "name": "best_tool",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "拔萃实验机房最好的工具箱",
   "main": "index.js",
   "scripts": {
     "start": "chcp 65001 & electron .",
-    "build": "npm run build:enable && npm run build:disable && npm run build:injector && npm run build:getAffinity && npm run build:electron",
+    "build": "npm run build:electron",
     "build:enable": "g++ -shared -o displayAffinity/enable.dll displayAffinity/enable.cpp",
     "build:disable": "g++ -shared -o displayAffinity/disable.dll displayAffinity/disable.cpp",
     "build:injector": "g++ -o displayAffinity/injector.exe displayAffinity/injector.cpp",
@@ -16,7 +16,7 @@
   "license": "GPL-3.0-only",
   "build": {
     "appId": "com.yajiyi.best_tool",
-    "productName": "BestTool",
+    "productName": "Best Tool",
     "files": [
       "**/*"
     ],
@@ -34,6 +34,7 @@
       "requestExecutionLevel": "admin"
     },
     "win": {
+      "icon": "icon.ico",
       "requestedExecutionLevel": "requireAdministrator",
       "target": [
         {
@@ -46,7 +47,7 @@
     }
   },
   "devDependencies": {
-    "electron": "^37.2.5",
+    "electron": "^37.2.6",
     "electron-builder": "^26.0.12"
   }
 }
