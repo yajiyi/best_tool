@@ -28,7 +28,7 @@
 2. 安装 electron 框架
 
 ```bash
-npm install electron --save-dev
+npm i
 ```
 
 3. 编译 dll 和 injector
@@ -51,16 +51,11 @@ npm run start
 ### 打包项目
 
 1. 请先完成 运行项目
-2. 安装 electron-builder 打包程序
 
-```bash
-npm install electron-builder --save-dev
-```
-
-3. 打包
+2. 打包
 
 ```bash
 npm run build
 ```
 
-4. 二进制文件将生成在 ./dist/BestTool x.x.x.exe
+3. 二进制文件将生成在 ./dist/BestTool x.x.x.exe
